@@ -70,15 +70,6 @@ Se deben embeber los archivos como recursos.
 
 ![Directories](http://www.bytte.com.co/ftpaccess/Varios/CarlosG/Documentaci%C3%B3n/ArchivosLicencia.png)
 
-El siguiente código se debe ejecutar antes de realizar el llamado a la funciona capturar para optener el ***bundlePath*** de la licencia.
-
-```swift
-    //Llamado Licencia
-    func initLic(){
-        bundlePath = Bundle.main.path(forResource: "1183_com.biometric.bytte.casbauth2021-07-16 00 00 00", ofType: "lic")!
-    }
-```
- 
 #### 3.3. Captura Documentos:
 
 #### 3.3.1 Cédula de Ciudadanía (Hologramas):
@@ -94,9 +85,9 @@ Para realizar el llamado se debe ejecutar el siguiente código:
         //Imagen de Fondo
         let imFront:UIImage! = UIImage(named:"front.png")
         
-        //FrontDocument View Controller
-        self.vcFrontDocument = CapturaFrenteDocumento(licenseKey: self.keyLicense, withPais: "co",
-                                withImagenGuia: imFront, withPassword: "", withTimeOut: 20)
+         //FrontDocument View Controller
+        self.vcFrontDocument = CapturaFrenteDocumento(licenseKey: self.licencia, withPais: "co",
+                                                      withImagenGuia: imFront, withPassword: "", withTimeOut: 20,withColorStatus: true)
         
         self.vcFrontDocument.frontDocumentProcessDelegate=self;
         
@@ -108,9 +99,10 @@ Para realizar el llamado se debe ejecutar el siguiente código:
         self.present(vc, animated:false, completion:nil)
     }
 ```
-* ***licenseKey***: cadena de texto entregada por Bytte para la activación del producto. 
+* ***LicenseKey***: cadena de texto entregada por Bytte para la activación del producto. 
 * ***WithPais***: variable de país a capturar (co).
 * ***WithTimeOut***: Tiempo para finalizar captura en segundos.
+* ***WithColorStatus***: Valida Fotocopias a blanco y negro.
 
 El delegado a suscribir es ***CapturaFrontDocumentDelegate***
 
@@ -142,7 +134,7 @@ Para realizar el llamado se debe ejecutar el siguiente código:
         //Imagen de Fondo
         let back:UIImage! = UIImage(named:"back_doc.png")
         //Llamado
-        self.vcBackDocumentAuthDoc = CapturaReversoDocumento(licenseKey: self.keyLicense,withPais: "co", withImagenGuia:back, withPassword: "", withTimeOut: 30)
+        self.vcBackDocumentAuthDoc = CapturaReversoDocumento(licenseKey: self.licencia, withPais: "CO", withImagenGuia: back, withPassword: "", withTimeOut: 30, withColorStatus: true);
         self.vcBackDocumentAuthDoc.capturaBarCodeDelegate = self;
         //Obtengo el Controller
         let vc:UIViewController! = self.vcBackDocumentAuthDoc.getReversoDocumentViewController()
@@ -153,6 +145,7 @@ Para realizar el llamado se debe ejecutar el siguiente código:
 * ***licenseKey***: cadena de texto entregada por Bytte para la activación del producto. 
 * ***WithPais***: variable de país a capturar (co).
 * ***WithTimeOut***: Tiempo para finalizar captura en segundos.
+* ***WithColorStatus***: Valida Fotocopias a blanco y negro.
 
 El delegado a suscribir es ***CapturaBarCodeDelegate***
 
@@ -173,8 +166,10 @@ El evento de CallBack de la captura del código de barras, esta dado por el sigu
 #### 3.3.2 Captura documentos frente y reverso:
 A continuación, se listan los documentos soportados para este proceso:
 
-  > * Cédula Ciudadanía Colombiana (Hologramas)
-  > * Cédula Ciudadanía Colombiana (Digital)
+  > * Cédula de Ciudadanía Colombiana (Hologramas).
+  > * Cédula de Ciudadanía Colombiana (Digital).
+  > * Tarjeta de Identidad Colombiana.
+  > * Cédula de Extranjería Colombiana.
 
 
 En los assets de la aplicacion debe tener un recurso llamado ***frontBack.png*** recurso que indica el momento de cambio de cara del documento.
@@ -191,7 +186,7 @@ Para realizar el llamado se debe ejecutar el siguiente código:
         let imReverso:UIImage! = UIImage(named:"back_co_doc.png");
         
         //View Controller
-        self.vcFrenteReversoDocument =  CapturaFrenteReverso(licenseKey: self.keyLicense, withPais: "co", withImagenGuiaFrente: imFrente, withImagenGuiaReverso: imReverso, withPassword: "", withTimeOut: 20);
+         self.vcFrenteReversoDocument =  CapturaFrenteReverso(licenseKey: self.keyLicense, withPais: "co", withImagenGuiaFrente: imFrente, withImagenGuiaReverso: imReverso, withPassword: "", withTimeOut: 40,withColorStatus: true);
         
         self.vcFrenteReversoDocument.capturarFrenteReversoDelegate=self;
         
@@ -206,7 +201,10 @@ Para realizar el llamado se debe ejecutar el siguiente código:
 * ***WithPais***: variable de país o documento a capturar.
    > * ***co***: Cédula Ciudadanía Colombiana (Hologramas).
    > * ***cov2***: Cédula Ciudadanía Colombiana (Digital).
+   > * ***coti***: Tarjeta de Identidad Colombiana.
+   > * ***coext***: Cédula de Extranjería Colombiana.
 * ***WithTimeOut***: Tiempo para finalizar captura en segundos.
+* ***WithColorStatus***: Valida Fotocopias a blanco y negro.
 
 El delegado a suscribir es ***CapturaFrenteReversoDelegate***
 
@@ -236,13 +234,17 @@ Para realizar el llamado se debe ejecutar el siguiente código:
     //Evento Capturar
     @IBAction func btnCapturar(_ sender: UIButton) {
         let fingerID = FingerID()
-        //Asigno delegado
+        //Asigno delegate
         fingerID.delegate = self
         //Request
         //Dedo base a Capturar (Mano derecha = 1,2,3,4,5) (Mano Izquierda = 6,7,8,9,10)
-        let requestF = FingerRequest(timeOut: 20, fingerNumber: 2, boxesColor: .white, solidColor: .black)
+        let requestFinger = FingerRequest(url: Endpoints.url, key: "", finger: 2, timeOut: Endpoints.timeOut)
+        //set color
+        fingerID.setBoxesColor = .white
+        fingerID.setSolidColor = .black
+        fingerID.setBoxesTransparent = .red
         //llamado
-        fingerID.fingersCaptureID(viewController: self, bundlePath: bundlePath, request: requestF)
+        fingerID.IDCaptureFinger(licenseId: licenseName, viewController: self, request: requestFinger)
     }
     
 ```
@@ -252,7 +254,8 @@ Para realizar el llamado se debe ejecutar el siguiente código:
    > * ***7***: Mano Izquierda.
 * ***timeOut***: Tiempo para finalizar captura en segundos.
 * ***boxesColor***: Color cuadrados captura. 
-* ***solidColor***: Color base captura. 
+* ***solidColor***: Color base captura.
+* ***licenseName***: nombre archivo licencia ("xxxx_com.bytte.bytte.2021-07-16 00 00 00"). 
 
 El delegado a suscribir es ***FingerIDDelegate***
 
@@ -310,18 +313,21 @@ Para realizar el llamado se debe ejecutar el siguiente código:
 ```swift
     //Captura Facial
     @IBAction func btnCapturar(_ sender: UIButton) {
-        let fingerID = FaceID()
+        let faceID = FaceID()
         
-        fingerID.delegate = self
+        faceID.delegate = self
         
-        let requestF = FaceRequest(timeOut: 20, color: .black)
+        faceID.setColor = .red
         
-        fingerID.faceCaptureID(viewcontrol: self, bundlePath: bundlePath, request: requestF)
+        let requestFace = FaceRequest(url: Endpoints.url, key: "", camera: 1, timeOut: Endpoints.timeOut)
+    
+        faceID.IDCaptureFace(licenseId: licenseName, viewcontrol: self, request: requestFace)
     }
 ```
 * ***bundlePath***: String archivo capturado anteriormente (3.2)
 * ***timeOut***: Tiempo para finalizar captura en segundos.
 * ***color***: Color base captura. 
+* ***licenseName***: nombre archivo licencia ("xxxx_com.bytte.bytte.2021-07-16 00 00 00"). 
 
 El delegado a suscribir es ***FaceIDDelegate***
 
@@ -363,6 +369,7 @@ Al realizar los llamados correspondientes para todas las capturas se genera una 
 #### 4.4. Captura correcta
 
 ![Directories](http://www.bytte.com.co/ftpaccess/Varios/CarlosG/Documentaci%C3%B3n/Correcta.png)
+
 
 
 
