@@ -102,7 +102,7 @@ Para realizar el llamado se debe ejecutar el siguiente código:
 * ***LicenseKey***: cadena de texto entregada por Bytte para la activación del producto. 
 * ***WithPais***: variable de país a capturar (co).
 * ***WithTimeOut***: Tiempo para finalizar captura en segundos.
-* ***WithPassword***: Llave de protección para las img. Esta retorna la img en formato .bytte se deja en vacio si no se requiere.
+* ***WithPassword***: Llave de protección para las img. Esta retorna la img en formato .bytte se deja en vacio si no se requiere. el resultado es una imagen cifrada con aes 256 por sesión.
 * ***WithColorStatus***: Valida Fotocopias a blanco y negro.
 
 El delegado a suscribir es ***CapturaFrontDocumentDelegate***
@@ -146,7 +146,7 @@ Para realizar el llamado se debe ejecutar el siguiente código:
 * ***licenseKey***: cadena de texto entregada por Bytte para la activación del producto. 
 * ***WithPais***: variable de país a capturar (co).
 * ***WithTimeOut***: Tiempo para finalizar captura en segundos.
-* ***WithPassword***: Llave de protección para las img. Esta retorna la img en formato .bytte se deja en vacio si no se requiere.
+* ***WithPassword***: Llave de protección para las img. Esta retorna la img en formato .bytte se deja en vacio si no se requiere. el resultado es una imagen cifrada con aes 256 por sesión.
 * ***WithColorStatus***: Valida Fotocopias a blanco y negro.
 
 El delegado a suscribir es ***CapturaBarCodeDelegate***
@@ -206,7 +206,7 @@ Para realizar el llamado se debe ejecutar el siguiente código:
    > * ***coti***: Tarjeta de Identidad Colombiana.
    > * ***coext***: Cédula de Extranjería Colombiana.
 * ***WithTimeOut***: Tiempo para finalizar captura en segundos.
-* ***WithPassword***: Llave de protección para las img. Esta retorna la img en formato .bytte se deja en vacio si no se requiere.
+* ***WithPassword***: Llave de protección para las img. Esta retorna la img en formato .bytte se deja en vacio si no se requiere. el resultado es una imagen cifrada con aes 256 por sesión.
 * ***WithColorStatus***: Valida Fotocopias a blanco y negro.
 
 El delegado a suscribir es ***CapturaFrenteReversoDelegate***
@@ -259,7 +259,7 @@ Para realizar el llamado se debe ejecutar el siguiente código:
 * ***boxesColor***: Color cuadrados captura. 
 * ***solidColor***: Color base captura.
 * ***licenseName***: nombre archivo licencia ("xxxx_com.bytte.bytte.2021-07-16 00 00 00"). 
-* ***key***: Llave de protección para las img. Esta retorna la img en formato .bytte se deja en vacio si no se requiere.
+* ***key***: Llave de protección para las img. Esta retorna la img en formato .bytte se deja en vacio si no se requiere. el resultado es una imagen cifrada con aes 256 por sesión.
 
 El delegado a suscribir es ***FingerIDDelegate***
 
@@ -373,6 +373,10 @@ Al realizar los llamados correspondientes para todas las capturas se genera una 
 #### 4.4. Captura correcta
 
 ![Directories](http://www.bytte.com.co/ftpaccess/Varios/CarlosG/Documentaci%C3%B3n/Correcta.png)
+
+
+
+
 
 
 
